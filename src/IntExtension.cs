@@ -31,4 +31,11 @@ public static class IntExtension
 
         return value?.ToString("N0");
     }
+
+    [Pure]
+    public static char ToChar(this int value, bool isCaps = false)
+    {
+        var c = (char)((isCaps ? 65 : 97) + (value - 1));
+        return c;
+    }
 }
