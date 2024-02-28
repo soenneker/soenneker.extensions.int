@@ -38,4 +38,14 @@ public static class IntExtension
         var c = (char)((isCaps ? 65 : 97) + (value - 1));
         return c;
     }
+
+    /// <summary>
+    /// Assumes value is always less than 16
+    /// </summary>
+    [Pure]
+    public static char ToHexChar(int value)
+    {
+        var result = (char)(value < 10 ? value + '0' : value - 10 + 'A');
+        return result;
+    }
 }
