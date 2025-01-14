@@ -24,7 +24,7 @@ public static class IntExtension
     [Pure]
     public static string? ToDisplay(this int? value, bool dashIfNull = false)
     {
-        if (value == null)
+        if (value is null)
             return dashIfNull ? "-" : null;
 
         // Format the non-nullable value
