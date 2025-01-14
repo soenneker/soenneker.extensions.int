@@ -25,19 +25,16 @@ public static class IntExtension
     public static string? ToDisplay(this int? value, bool dashIfNull = false)
     {
         if (value == null)
-        {
-            if (dashIfNull)
-                return "-";
-        }
+            return dashIfNull ? "-" : null;
 
-        return value?.ToString("N0");
+        // Format the non-nullable value
+        return value.Value.ToString("N0");
     }
 
     [Pure]
     public static char ToChar(this int value, bool isCaps = false)
     {
-        var c = (char)((isCaps ? 65 : 97) + (value - 1));
-        return c;
+        return (char)((isCaps ? 'A' : 'a') + (value - 1));
     }
 
     /// <summary>
@@ -46,8 +43,7 @@ public static class IntExtension
     [Pure]
     public static char ToHexChar(int value)
     {
-        var result = (char)(value < 10 ? value + '0' : value - 10 + 'A');
-        return result;
+        return (char)(value < 10 ? value + '0' : value - 10 + 'A');
     }
 
     /// <summary>
