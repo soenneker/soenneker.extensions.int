@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 
 namespace Soenneker.Extensions.Int;
 
@@ -8,6 +9,18 @@ namespace Soenneker.Extensions.Int;
 /// </summary>
 public static class IntExtension
 {
+    private static readonly decimal[] _pow10Table =
+    [
+        1m, 10m, 100m, 1000m, 10000m, 100000m, 1000000m, 10000000m,
+        100000000m, 1000000000m, 10000000000m, 100000000000m,
+        1000000000000m, 10000000000000m, 100000000000000m, 1000000000000000m,
+        10000000000000000m, 100000000000000000m, 1000000000000000000m,
+        10000000000000000000m, 100000000000000000000m, 1000000000000000000000m,
+        10000000000000000000000m, 100000000000000000000000m,
+        1000000000000000000000000m, 10000000000000000000000000m,
+        100000000000000000000000000m, 1000000000000000000000000000m
+    ];
+
     /// <summary>
     /// Formats integers so they have commas every three decimal places. Shorthand for "N0"
     /// </summary>
@@ -44,6 +57,18 @@ public static class IntExtension
     public static char ToHexChar(int value)
     {
         return (char)(value < 10 ? value + '0' : value - 10 + 'A');
+    }
+
+    /// <summary>
+    /// Fast power of 10 calculation. Exponent must be between 0 and 28.
+    /// </summary>
+    /// <param name="exponent"></param>
+    /// <returns></returns>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static decimal Pow10(int exponent)
+    {
+        return _pow10Table[exponent];
     }
 
     /// <summary>
