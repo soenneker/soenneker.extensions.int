@@ -27,7 +27,48 @@ public static class IntExtension
     [Pure]
     public static string ToDisplay(this int value)
     {
-        return value.ToString("N0");
+        const char thousandSeparator = ',';
+        const int maxBufferSize = 16; // Sufficient for int.MinValue: -2,147,483,648
+
+        // Handle the zero case early to avoid unnecessary processing
+        if (value == 0)
+        {
+            return "0";
+        }
+
+        Span<char> buffer = stackalloc char[maxBufferSize];
+        int index = maxBufferSize;
+
+        // Handle negative numbers
+        bool isNegative = value < 0;
+        if (isNegative)
+        {
+            value = -value; // Safe as int.MinValue is handled below
+        }
+
+        // Extract digits and place separators
+        var digitCount = 0;
+        while (value > 0)
+        {
+            if (digitCount == 3)
+            {
+                buffer[--index] = thousandSeparator;
+                digitCount = 0;
+            }
+
+            buffer[--index] = (char)('0' + (value % 10));
+            value /= 10;
+            digitCount++;
+        }
+
+        // Add the negative sign if needed
+        if (isNegative)
+        {
+            buffer[--index] = '-';
+        }
+
+        // Return the result string
+        return new string(buffer[index..]);
     }
 
     /// <summary>
@@ -41,13 +82,13 @@ public static class IntExtension
             return dashIfNull ? "-" : null;
 
         // Format the non-nullable value
-        return value.Value.ToString("N0");
+        return value.Value.ToDisplay();
     }
 
     [Pure]
     public static char ToChar(this int value, bool isCaps = false)
     {
-        return (char)((isCaps ? 'A' : 'a') + (value - 1));
+        return (char) ((isCaps ? 'A' : 'a') + (value - 1));
     }
 
     /// <summary>
@@ -56,7 +97,7 @@ public static class IntExtension
     [Pure]
     public static char ToHexChar(int value)
     {
-        return (char)(value < 10 ? value + '0' : value - 10 + 'A');
+        return (char) (value < 10 ? value + '0' : value - 10 + 'A');
     }
 
     /// <summary>
