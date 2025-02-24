@@ -15,7 +15,7 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_ValidInteger_ProducesValidGuidFormat()
     {
         // Arrange
-        var value = 123456789;
+        const int value = 123456789;
 
         // Act
         string guidString = value.ToGuidString();
@@ -28,7 +28,7 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_SameInteger_ReturnsConsistentGuid()
     {
         // Arrange
-        var value = 987653145;
+        const int value = 987653145;
 
         // Act
         string guid1 = value.ToGuidString();
@@ -41,9 +41,9 @@ public class IntExtensionTests : UnitTest
     [Fact]
     public void ToGuidString_is_deterministic()
     {
-        var value = 987653145;
+        const int value = 987653145;
 
-        var guid1 = value.ToGuidString();
+        string guid1 = value.ToGuidString();
 
         // Don't want this to change
         guid1.Should().Be("3ade6419-8d00-0650-65ff-4c5bcbd204a6");
@@ -53,8 +53,8 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_DifferentIntegers_ProduceDifferentGuids()
     {
         // Arrange
-        var value1 = 12345;
-        var value2 = 67890;
+        const int value1 = 12345;
+        const int value2 = 67890;
 
         // Act
         string guid1 = value1.ToGuidString();
@@ -68,7 +68,7 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_Zero_ShouldReturnValidGuid()
     {
         // Arrange
-        var value = 0;
+        const int value = 0;
 
         // Act
         string guidString = value.ToGuidString();
@@ -81,7 +81,7 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_MaxValue_ShouldReturnValidGuid()
     {
         // Arrange
-        var value = int.MaxValue;
+        const int value = int.MaxValue;
 
         // Act
         string guidString = value.ToGuidString();
@@ -94,7 +94,7 @@ public class IntExtensionTests : UnitTest
     public void ToGuidString_MinValue_ShouldReturnValidGuid()
     {
         // Arrange
-        var value = int.MinValue;
+        const int value = int.MinValue;
 
         // Act
         string guidString = value.ToGuidString();
