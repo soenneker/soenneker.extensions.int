@@ -57,7 +57,7 @@ public static class IntExtension
                 digitCount = 0;
             }
 
-            buffer[--index] = (char)('0' + (value % 10));
+            buffer[--index] = (char)('0' + value % 10);
             value /= 10;
             digitCount++;
         }
@@ -165,11 +165,11 @@ public static class IntExtension
 
         // Compute a hash and store it in a consistent order
         int hash = HashInteger(value);
-        BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(4), hash);
+        BinaryPrimitives.WriteInt32LittleEndian(bytes[4..], hash);
 
         // Use a large prime multiplication to further distribute bits
         long mixedValue = value * 6364136223846793005L;
-        BinaryPrimitives.WriteInt64LittleEndian(bytes.Slice(8), mixedValue);
+        BinaryPrimitives.WriteInt64LittleEndian(bytes[8..], mixedValue);
 
         // Convert to a GUID and return as a string
         return new Guid(bytes).ToString("D");
@@ -179,11 +179,11 @@ public static class IntExtension
     {
         unchecked
         {
-            value ^= (value >> 16);
+            value ^= value >> 16;
             value *= unchecked((int)0x85ebca6b); // Ensure signed integer multiplication
-            value ^= (value >> 13);
+            value ^= value >> 13;
             value *= unchecked((int)0xc2b2ae35); // Ensure signed integer multiplication
-            value ^= (value >> 16);
+            value ^= value >> 16;
         }
         return value;
     }
