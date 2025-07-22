@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using Soenneker.Utils.Random;
 
 namespace Soenneker.Extensions.Int;
 
@@ -173,6 +174,45 @@ public static class IntExtension
 
         // Convert to a GUID and return as a string
         return new Guid(bytes).ToString("D");
+    }
+
+    /// <summary>
+    /// Applies a random jitter to the specified integer value, within a percentage-based range.
+    /// </summary>
+    /// <param name="value">The original integer value to apply jitter to.</param>
+    /// <param name="percent">
+    /// The maximum percentage of the original value used to compute the jitter range (e.g., 0.1 for ±10%). 
+    /// Must be between 0.0 and 1.0. Defaults to 0.1.
+    /// </param>
+    /// <param name="minDelta">
+    /// The minimum amount of jitter to apply regardless of the computed percentage. 
+    /// Useful to ensure non-zero jitter for small values. Defaults to 1.
+    /// </param>
+    /// <returns>
+    /// An integer with random jitter applied, uniformly distributed within the calculated range.
+    /// The return value will be in the range [value - delta, value + delta].
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="percent"/> is less than 0.0 or greater than 1.0.
+    /// </exception>
+    /// <remarks>
+    /// The jitter is applied symmetrically around the original value. For example, with a value of 100 and a percent of 0.1,
+    /// the result will be between 90 and 110 (inclusive). The jitter range is calculated using rounding to avoid downward bias.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// int original = 100;
+    /// int jittered = original.ApplyJitter(); // returns a value between 90 and 110
+    /// </code>
+    /// </example>
+    [Pure]
+    public static int ApplyJitter(this int value, double percent = 0.1, int minDelta = 1)
+    {
+        if (percent is < 0.0 or > 1.0)
+            throw new ArgumentOutOfRangeException(nameof(percent), "Must be between 0.0 and 1.0");
+
+        int delta = Math.Max(minDelta, (int)Math.Round(Math.Abs(value) * percent));
+        return value + RandomUtil.Next(-delta, delta + 1);
     }
 
     private static int HashInteger(int value)
