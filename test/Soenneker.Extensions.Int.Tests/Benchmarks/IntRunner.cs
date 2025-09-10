@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using BenchmarkDotNet.Reports;
+﻿using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 using Soenneker.Benchmarking.Extensions.Summary;
 using Soenneker.Tests.Benchmark;
@@ -14,7 +13,7 @@ public class IntRunner : BenchmarkTest
     }
 
     //[Fact]
-    public async ValueTask ToDisplay()
+    public async System.Threading.Tasks.ValueTask ToDisplay()
     {
         Summary summary = BenchmarkRunner.Run<ToDisplayBenchmarks>(DefaultConf);
 
