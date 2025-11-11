@@ -83,6 +83,7 @@ public static class IntExtension
     /// <summary>
     /// Converts a Unix timestamp (seconds) to UTC <see cref="DateTime"/>.
     /// </summary>
+    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DateTime ToDateTimeFromUnixTime(this int unixTime)
     {
@@ -132,6 +133,7 @@ public static class IntExtension
         return value + RandomUtil.Next(-delta, delta + 1);
     }
 
+    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int HashInteger(int value)
     {
