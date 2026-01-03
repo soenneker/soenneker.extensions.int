@@ -87,8 +87,17 @@ public static class IntExtension
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DateTime ToDateTimeFromUnixTime(this int unixTime)
     {
-        // This path is allocation-free; DateTimeOffset.FromUnixTimeSeconds is fine too.
         return DateTime.UnixEpoch.AddSeconds(unixTime);
+    }
+
+    /// <summary>
+    /// Converts a Unix timestamp (seconds) to <see cref="DateTimeOffset"/>.
+    /// </summary>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static DateTimeOffset ToDateTimeOffsetFromUnixTime(this int unixTime)
+    {
+        return DateTimeOffset.UnixEpoch.AddSeconds(unixTime);
     }
 
     /// <summary>
