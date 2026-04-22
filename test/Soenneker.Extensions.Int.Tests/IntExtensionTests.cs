@@ -1,17 +1,16 @@
 using AwesomeAssertions;
 using Soenneker.Tests.Unit;
-using Xunit;
 
 namespace Soenneker.Extensions.Int.Tests;
 
 public class IntExtensionTests : UnitTest
 {
-    [Fact]
+    [Test]
     public void Default()
     {
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_ValidInteger_ProducesValidGuidFormat()
     {
         // Arrange
@@ -24,7 +23,7 @@ public class IntExtensionTests : UnitTest
         guidString.Should().MatchRegex(@"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_SameInteger_ReturnsConsistentGuid()
     {
         // Arrange
@@ -38,7 +37,7 @@ public class IntExtensionTests : UnitTest
         guid1.Should().Be(guid2, because: "the same integer should always produce the same GUID");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_is_deterministic()
     {
         const int value = 987653145;
@@ -49,7 +48,7 @@ public class IntExtensionTests : UnitTest
         guid1.Should().Be("3ade6419-8d00-0650-65ff-4c5bcbd204a6");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_DifferentIntegers_ProduceDifferentGuids()
     {
         // Arrange
@@ -64,7 +63,7 @@ public class IntExtensionTests : UnitTest
         guid1.Should().NotBe(guid2, because: "different integers should generate different GUIDs");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_Zero_ShouldReturnValidGuid()
     {
         // Arrange
@@ -77,7 +76,7 @@ public class IntExtensionTests : UnitTest
         guidString.Should().NotBeNullOrEmpty().And.MatchRegex(@"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_MaxValue_ShouldReturnValidGuid()
     {
         // Arrange
@@ -90,7 +89,7 @@ public class IntExtensionTests : UnitTest
         guidString.Should().NotBeNullOrEmpty().And.MatchRegex(@"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
     }
 
-    [Fact]
+    [Test]
     public void ToGuidString_MinValue_ShouldReturnValidGuid()
     {
         // Arrange
