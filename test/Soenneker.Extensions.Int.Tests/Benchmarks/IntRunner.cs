@@ -7,15 +7,11 @@ namespace Soenneker.Extensions.Int.Tests.Benchmarks;
 
 public class IntRunner : BenchmarkTest
 {
-    public IntRunner() : base()
-    {
-    }
-
     //[Test]
     public async System.Threading.Tasks.ValueTask ToDisplay()
     {
         Summary summary = BenchmarkRunner.Run<ToDisplayBenchmarks>(DefaultConf);
 
-        await summary.OutputSummaryToLog(OutputHelper, CancellationToken);
+        await summary.OutputSummaryToLog();
     }
 }
