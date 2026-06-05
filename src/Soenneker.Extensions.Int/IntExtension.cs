@@ -52,6 +52,12 @@ public static class IntExtension
         return value.Value.ToDisplay();
     }
 
+    /// <summary>
+    /// Executes the to char operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="isCaps">The is caps.</param>
+    /// <returns>The result of the operation.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToChar(this int value, bool isCaps = false)
