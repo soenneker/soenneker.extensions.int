@@ -26,6 +26,7 @@ public static class IntExtension
     ];
 
     /// <summary>Formats integers with thousands separators (comma), shorthand for "N0" invariant.</summary>
+    /// <returns>Formats integers with thousands separators (comma), shorthand for "N0" invariant.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToDisplay(this int value)
@@ -53,11 +54,11 @@ public static class IntExtension
     }
 
     /// <summary>
-    /// Executes the to char operation.
+    /// Maps an integer from 1 through 26 to its alphabetic character.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="isCaps">The is caps.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="value">The one-based alphabet position to convert.</param>
+    /// <param name="isCaps">True to return an uppercase letter; false for lowercase.</param>
+    /// <returns>The corresponding alphabetic character.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToChar(this int value, bool isCaps = false)
@@ -67,6 +68,7 @@ public static class IntExtension
     }
 
     /// <summary>Assumes value is always less than 16.</summary>
+    /// <returns>Assumes value is always less than 16.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ToHexChar(int value)
@@ -76,6 +78,7 @@ public static class IntExtension
     }
 
     /// <summary>Fast power of 10 calculation. Exponent must be between 0 and 28.</summary>
+    /// <returns>Fast power of 10 calculation. Exponent must be between 0 and 28.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static decimal Pow10(int exponent)
@@ -89,6 +92,7 @@ public static class IntExtension
     /// <summary>
     /// Converts a Unix timestamp (seconds) to UTC <see cref="DateTime"/>.
     /// </summary>
+    /// <returns>Converts a Unix timestamp (seconds) to UTC <see cref="DateTime"/>.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DateTime ToDateTimeFromUnixTime(this int unixTime)
@@ -99,6 +103,7 @@ public static class IntExtension
     /// <summary>
     /// Converts a Unix timestamp (seconds) to <see cref="DateTimeOffset"/>.
     /// </summary>
+    /// <returns>Converts a Unix timestamp (seconds) to <see cref="DateTimeOffset"/>.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DateTimeOffset ToDateTimeOffsetFromUnixTime(this int unixTime)
@@ -109,6 +114,7 @@ public static class IntExtension
     /// <summary>
     /// Converts a 32-bit integer into a deterministic GUID string in "D" format.
     /// </summary>
+    /// <returns>Converts a 32-bit integer into a deterministic GUID string in "D" format.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToGuidString(this int value)
@@ -132,6 +138,7 @@ public static class IntExtension
     /// <summary>
     /// Applies uniform random jitter within ±(percent·|value|), with a minimum absolute delta.
     /// </summary>
+    /// <returns>Applies uniform random jitter within ±(percent·|value|), with a minimum absolute delta.</returns>
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ApplyJitter(this int value, double percent = 0.1, int minDelta = 1)
