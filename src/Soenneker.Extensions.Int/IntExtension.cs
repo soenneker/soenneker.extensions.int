@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using Soenneker.Utils.Random;
 
 namespace Soenneker.Extensions.Int;
 
@@ -22,7 +21,8 @@ public static class IntExtension
         10000000000000000000m, 100000000000000000000m, 1000000000000000000000m,
         10000000000000000000000m, 100000000000000000000000m,
         1000000000000000000000000m, 10000000000000000000000000m,
-        100000000000000000000000000m, 1000000000000000000000000000m
+        100000000000000000000000000m, 1000000000000000000000000000m,
+        10000000000000000000000000000m
     ];
 
     /// <summary>Formats integers with thousands separators (comma), shorthand for "N0" invariant.</summary>
@@ -146,13 +146,17 @@ public static class IntExtension
         if ((uint)minDelta > int.MaxValue) // cheap validation (also filters negatives)
             throw new ArgumentOutOfRangeException(nameof(minDelta));
 
-        if (percent is < 0.0 or > 1.0)
+        if (double.IsNaN(percent) || percent is < 0.0 or > 1.0)
             throw new ArgumentOutOfRangeException(nameof(percent), "Must be between 0.0 and 1.0");
 
-        // Using Abs(value) avoids negative skew; Math.Round avoids downward bias.
-        int delta = Math.Max(minDelta, (int)Math.Round(Math.Abs((long)value) * percent)); // cast to long protects Abs(int.MinValue)
-        // RandomUtil.Next(min, maxExclusive)
-        return value + RandomUtil.Next(-delta, delta + 1);
+        // Long arithmetic keeps int.MinValue, the upper bound, and the final addition representable.
+        long proportionalDelta = (long)Math.Round(Math.Abs((long)value) * percent);
+        long delta = Math.Max(minDelta, proportionalDelta);
+        long minimumOffset = Math.Max(-delta, int.MinValue - (long)value);
+        long maximumOffset = Math.Min(delta, int.MaxValue - (long)value);
+        long offset = System.Random.Shared.NextInt64(minimumOffset, maximumOffset + 1);
+
+        return (int)(value + offset);
     }
 
     [Pure]

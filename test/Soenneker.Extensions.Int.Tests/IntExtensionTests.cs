@@ -101,4 +101,20 @@ public class IntExtensionTests : UnitTest
         // Assert
         guidString.Should().NotBeNullOrEmpty().And.MatchRegex(@"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
     }
+
+    [Test]
+    public async System.Threading.Tasks.Task Pow10_supports_its_documented_upper_bound()
+    {
+        await Assert.That(IntExtension.Pow10(28)).IsEqualTo(10000000000000000000000000000m);
+    }
+
+    [Test]
+    public async System.Threading.Tasks.Task Jitter_remains_representable_at_integer_boundaries()
+    {
+        for (var i = 0; i < 100; i++)
+        {
+            await Assert.That(int.MinValue.ApplyJitter(1.0, int.MaxValue)).IsLessThanOrEqualTo(0);
+            await Assert.That(int.MaxValue.ApplyJitter(1.0, int.MaxValue)).IsGreaterThanOrEqualTo(0);
+        }
+    }
 }

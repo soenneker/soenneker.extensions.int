@@ -4,7 +4,7 @@
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.extensions.Int/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.extensions.Int/actions/workflows/codeql.yml)
 
 # ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Extensions.Int
-A  collection of useful int (Int32) extension methods.
+Formatting, character conversion, Unix time, deterministic identifiers, powers of ten, and bounded random jitter for `int` values.
 
 ## Installation
 
@@ -12,22 +12,63 @@ A  collection of useful int (Int32) extension methods.
 dotnet add package Soenneker.Extensions.Int
 ```
 
-## Quick start
+## Display formatting
 
 ```csharp
 using Soenneker.Extensions.Int;
 
 int value = 42;
-var result = value.ToDisplay();
+string display = value.ToDisplay(); // "42"
+
+int? missing = null;
+string? blank = missing.ToDisplay();             // null
+string dash = missing.ToDisplay(dashIfNull: true)!; // "-"
 ```
 
-## Common operations
+`ToDisplay()` uses invariant `N0` formatting, including comma group separators and a leading minus sign.
 
-- `ToDisplay()` - Formats integers with thousands separators (comma), shorthand for "N0" invariant.
-- `ToChar()` - Casts the integer to a UTF-16 `char`; the number is treated as a character code, not decimal text.
-- `ToHexChar()` - Assumes value is always less than 16.
-- `Pow10()` - Fast power of 10 calculation. Exponent must be between 0 and 28.
-- `ToDateTimeFromUnixTime()` - Converts a Unix timestamp (seconds) to UTC `DateTime`.
-- `ToDateTimeOffsetFromUnixTime()` - Converts a Unix timestamp (seconds) to `DateTimeOffset`.
-- `ToGuidString()` - Converts a 32-bit integer into a deterministic GUID string in "D" format.
-- `ApplyJitter()` - Applies uniform random jitter within ±(percent·|value|), with a minimum absolute delta.
+## Character conversion
+
+```csharp
+char lower = 1.ToChar();             // 'a'
+char upper = 26.ToChar(isCaps: true); // 'Z'
+char hex = IntExtension.ToHexChar(15); // 'F'
+```
+
+`ToChar()` expects a one-based alphabet position from 1 through 26. `ToHexChar()` expects a hexadecimal digit from 0 through 15. These methods do not validate their input; values outside those domains produce other UTF-16 characters.
+
+## Powers of ten
+
+```csharp
+decimal scale = IntExtension.Pow10(6); // 1000000m
+```
+
+`Pow10()` returns an exact `decimal` power for exponents 0 through 28. Values outside that range throw `ArgumentOutOfRangeException`.
+
+## Unix timestamps
+
+```csharp
+DateTime utc = unixSeconds.ToDateTimeFromUnixTime();
+DateTimeOffset instant = unixSeconds.ToDateTimeOffsetFromUnixTime();
+```
+
+The input is seconds since the Unix epoch, not milliseconds. The `DateTime` result has `Kind` set to `Utc`; the `DateTimeOffset` result has a zero offset. Because the source is an `int`, its useful range is limited to 32-bit Unix seconds.
+
+## Deterministic GUID text
+
+```csharp
+string id = customerNumber.ToGuidString();
+```
+
+`ToGuidString()` maps each 32-bit integer deterministically to a lowercase GUID string in `D` format. It is suitable for stable namespacing or compatibility keys. It does not create a random UUID and must not be used as an unpredictable token, secret, or proof of uniqueness outside the 32-bit input domain.
+
+## Random jitter
+
+```csharp
+int delayedMilliseconds = 1_000.ApplyJitter(percent: 0.1, minDelta: 1);
+// Uniformly selected from 900 through 1100.
+```
+
+`ApplyJitter()` chooses an inclusive random offset within `±max(minDelta, round(abs(value) * percent))`. At integer boundaries, the range is clipped so the returned value cannot overflow. `percent` must be from 0 through 1 and `minDelta` must be nonnegative.
+
+The jitter source is appropriate for retry timing and load spreading, not cryptographic use.
