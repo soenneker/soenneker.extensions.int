@@ -103,13 +103,13 @@ public class IntExtensionTests : UnitTest
     }
 
     [Test]
-    public async System.Threading.Tasks.Task Pow10_supports_its_documented_upper_bound()
+    public async System.Threading.Tasks.ValueTask Pow10_supports_its_documented_upper_bound()
     {
         await Assert.That(IntExtension.Pow10(28)).IsEqualTo(10000000000000000000000000000m);
     }
 
     [Test]
-    public async System.Threading.Tasks.Task Jitter_remains_representable_at_integer_boundaries()
+    public async System.Threading.Tasks.ValueTask Jitter_remains_representable_at_integer_boundaries()
     {
         for (var i = 0; i < 100; i++)
         {
